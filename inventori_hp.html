@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Stok & Profit HP</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+        }
+
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: #1e293b; }
+        .container { max-width: 1100px; margin: auto; }
+        
+        /* Dashboard Styles */
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-left: 5px solid var(--primary); }
+        .stat-card h3 { margin: 0; font-size: 0.8rem; text-transform: uppercase; color: #64748b; }
+        .stat-card p { margin: 10px 0 0; font-size: 1.5rem; font-weight: bold; }
+
+        .grid-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+        @media (max-width: 850px) { .grid-layout { grid-template-columns: 1fr; } }
+
+        .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        h2 { font-size: 1.1rem; margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px; }
+
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+        
+        .qc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
+        
+        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn:hover { opacity: 0.9; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { text-align: left; background: #f8fafc; padding: 12px; border-bottom: 2px solid #e2e8f0; }
+        td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+        .ready { background: #dcfce7; color: #166534; }
+        .sold { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header style="margin-bottom: 25px;">
+        <h1>Manajemen Stok HP</h1>
+    </header>
+
+    <div class="dashboard">
+        <div class="stat-card">
+            <h3>Total Unit Ready</h3>
+            <p id="countReady">0</p>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--success);">
+            <h3>Nilai Stok (Modal)</h3>
+            <p id="totalModal">Rp 0</p>
+        </div>
+        <div class="stat-card" style="border-left-color: #f59e0b;">
+            <h3>Estimasi Profit</h3>
+            <p id="totalProfit">Rp 0</p>
+        </div>
+    </div>
+
+    <div class="grid-layout">
+        <div class="card">
+            <h2>Tambah Unit Baru</h2>
+            <form id="hpForm">
+                <label>Merk & Tipe</label>
+                <input type="text" id="tipe" placeholder="iPhone 14 Pro" required>
+                
+                <div style="display: flex; gap: 10px;">
+                    <div style="flex:1">
+                        <label>Harga Beli</label>
+                        <input type="number" id="hBeli" placeholder="Modal" required>
+                    </div>
+                    <div style="flex:1">
+                        <label>Harga Jual</label>
+                        <input type="number" id="hJual" placeholder="Target" required>
+                    </div>
+                </div>
+
+                <label>Status Unit</label>
+                <select id="status">
+                    <option value="Ready">Ready Stok</option>
+                    <option value="Terjual">Terjual</option>
+                </select>
+
+                <label>Checkup Kondisi</label>
+                <div class="qc-grid">
+                    <div>
+                        <label>Layar</label>
+                        <select id="qcLayar">
+                            <option>Mulus</option>
+                            <option>Shadow</option>
+                            <option>Retak</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Baterai</label>
+                        <input type="text" id="qcBat" placeholder="BH / Kondisi">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Simpan ke Inventori</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Daftar Inventori</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Harga Jual</th>
+                            <th>Status</th>
+                            <th>QC</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTable">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let inventory = JSON.parse(localStorage.getItem('hp_data')) || [];
+
+    const form = document.getElementById('hpForm');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const item = {
+            id: Date.now(),
+            tipe: document.getElementById('tipe').value,
+            beli: parseInt(document.getElementById('hBeli').value),
+            jual: parseInt(document.getElementById('hJual').value),
+            status: document.getElementById('status').value,
+            layar: document.getElementById('qcLayar').value,
+            baterai: document.getElementById('qcBat').value
+        };
+        inventory.push(item);
+        updateUI();
+        form.reset();
+    });
+
+    function deleteItem(id) {
+        inventory = inventory.filter(item => item.id !== id);
+        updateUI();
+    }
+
+    function toggleStatus(id) {
+        const index = inventory.findIndex(item => item.id === id);
+        inventory[index].status = inventory[index].status === 'Ready' ? 'Terjual' : 'Ready';
+        updateUI();
+    }
+
+    function updateUI() {
+        localStorage.setItem('hp_data', JSON.stringify(inventory));
+        const table = document.getElementById('inventoryTable');
+        table.innerHTML = '';
+        
+        let readyCount = 0;
+        let totalModal = 0;
+        let estimasiProfit = 0;
+
+        inventory.forEach(item => {
+            const isReady = item.status === 'Ready';
+            if(isReady) {
+                readyCount++;
+                totalModal += item.beli;
+                estimasiProfit += (item.jual - item.beli);
+            }
+
+            table.innerHTML += `
+                <tr>
+                    <td><strong>${item.tipe}</strong></td>
+                    <td>Rp ${item.jual.toLocaleString()}</td>
+                    <td><span class="badge ${isReady ? 'ready' : 'sold'}" onclick="toggleStatus(${item.id})" style="cursor:pointer">${item.status}</span></td>
+                    <td>${item.layar} | ${item.baterai}</td>
+                    <td><button onclick="deleteItem(${item.id})" style="color:red; border:none; background:none; cursor:pointer">Hapus</button></td>
+                </tr>
+            `;
+        });
+
+        document.getElementById('countReady').innerText = readyCount;
+        document.getElementById('totalModal').innerText = 'Rp ' + totalModal.toLocaleString();
+        document.getElementById('totalProfit').innerText = 'Rp ' + estimasiProfit.toLocaleString();
+    }
+
+    // Load data awal
+    updateUI();
+</script>
+
+</body>
+</html>
