@@ -5,85 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>X-TEN'S | Laporan Penjualan</title>
     <style>
-        :root {
-            --primary: #4f46e5;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-        }
-
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            margin: 0; padding: 15px; color: var(--text-main); min-height: 100vh;
-        }
-
+        :root { --primary: #4f46e5; --success: #10b981; --danger: #ef4444; --bg: #f8fafc; --card: #ffffff; --text-main: #1e293b; --text-muted: #64748b; --border: #e2e8f0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); margin: 0; padding: 15px; color: var(--text-main); min-height: 100vh; }
         .container { max-width: 800px; margin: auto; padding-bottom: 50px; }
-        
-        /* Navigasi Atas */
-        .nav-header {
-            display: flex; justify-content: space-between; align-items: center; 
-            margin-bottom: 25px;
-        }
-        .header-title {
-            font-size: 1.5rem; font-weight: 800; margin: 0;
-            background: -webkit-linear-gradient(45deg, var(--success), #3b82f6);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .btn-back {
-            background: #e2e8f0; color: var(--text-main); text-decoration: none;
-            padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.85rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: background 0.2s;
-        }
-        .btn-back:hover { background: #cbd5e1; }
-
-        /* Dashboard Keuangan Besar */
-        .finance-grid {
-            display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px;
-        }
+        .nav-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .header-title { font-size: 1.5rem; font-weight: 800; margin: 0; background: -webkit-linear-gradient(45deg, var(--success), #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-back { background: #e2e8f0; color: var(--text-main); text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .finance-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
         @media (min-width: 600px) { .finance-grid { grid-template-columns: repeat(3, 1fr); } }
-
-        .stat-card { 
-            background: var(--card); padding: 20px; border-radius: 16px; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: relative; overflow: hidden;
-            display: flex; flex-direction: column; justify-content: center;
-        }
+        .stat-card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
         .stat-card::before { content: ''; position: absolute; left: 0; top: 0; width: 5px; height: 100%; }
-        
-        .card-income::before { background: var(--success); }
-        .card-expense::before { background: var(--danger); }
-        .card-profit::before { background: var(--primary); }
-
+        .card-income::before { background: var(--success); } .card-expense::before { background: var(--danger); } .card-profit::before { background: var(--primary); }
         .stat-card h3 { margin: 0 0 5px 0; font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;}
         .stat-card p { margin: 0; font-size: 1.6rem; font-weight: 800; color: var(--text-main); }
         .stat-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;}
-
         h2 { font-size: 1.2rem; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-top: 0; margin-bottom: 15px; color: var(--text-main); }
-
-        /* List Riwayat Penjualan */
         .list-container { display: flex; flex-direction: column; gap: 12px; }
-        .list-item { 
-            background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 15px; 
-            display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            border-left: 4px solid var(--success);
-        }
+        .list-item { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 15px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border-left: 4px solid var(--success); }
         .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .item-title { font-weight: 800; font-size: 1.1rem; color: var(--text-main); margin-bottom: 4px; }
-        
-        .profit-badge { 
-            background: #ecfdf5; color: #047857; font-weight: 800; font-size: 1rem; 
-            padding: 6px 12px; border-radius: 8px; border: 1px solid #a7f3d0;
-            text-align: right;
-        }
-        
+        .profit-badge { background: #ecfdf5; color: #047857; font-weight: 800; font-size: 1rem; padding: 6px 12px; border-radius: 8px; border: 1px solid #a7f3d0; text-align: right; }
         .detail-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-muted); margin-top: 5px; border-top: 1px dashed var(--border); padding-top: 8px;}
         .date-text { font-size: 0.75rem; background: #f1f5f9; padding: 4px 8px; border-radius: 6px; font-weight: 600;}
-
         #loader { text-align: center; color: var(--primary); font-weight: bold; padding: 20px; }
     </style>
 </head>
@@ -103,24 +46,21 @@
             <p id="totalPendapatan">Rp 0</p>
             <div class="stat-sub">Dari unit yang laku terjual</div>
         </div>
-        
         <div class="stat-card card-expense">
             <h3>Total Pengeluaran</h3>
             <p id="totalPengeluaran">Rp 0</p>
             <div class="stat-sub">Modal belanja keseluruhan</div>
         </div>
-
         <div class="stat-card card-profit">
             <h3>Keuntungan Bersih</h3>
             <p id="totalProfit">Rp 0</p>
-            <div class="stat-sub">Profit dari unit terjual</div>
+            <div class="stat-sub">Profit bersih (Uang Masuk - Modal)</div>
         </div>
     </div>
 
     <div>
         <h2>✅ Riwayat Unit Terjual</h2>
-        <div class="list-container" id="salesList">
-            </div>
+        <div class="list-container" id="salesList"></div>
     </div>
 </div>
 
@@ -128,7 +68,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Konfigurasi Firebase Asli Anda
     const firebaseConfig = {
       apiKey: "AIzaSyDmi2RvPA_PchOkx9g52uqD-GoXryyxWiQ",
       authDomain: "xtens-inventory.firebaseapp.com",
@@ -143,29 +82,17 @@
     const db = getDatabase(app);
     const inventoryRef = ref(db, 'inventory');
 
-    // Fungsi format rupiah
-    function formatRupiah(angka) {
-        return angka.toLocaleString('id-ID');
-    }
-
-    // Fungsi format tanggal dari timestamp
+    function formatRupiah(angka) { return angka.toLocaleString('id-ID'); }
     function formatTanggal(timestamp) {
         if (!timestamp) return 'Tanggal tidak terekam';
-        const date = new Date(timestamp);
-        return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        return new Date(timestamp).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
     }
 
-    // Ambil Data Realtime
     onValue(inventoryRef, (snapshot) => {
         document.getElementById('loader').style.display = 'none';
         const data = snapshot.val();
-        
-        // Ubah objek jadi array
         const inventory = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
-        
-        // Urutkan dari yang paling baru diinput
         inventory.reverse(); 
-        
         renderFinance(inventory);
     });
 
@@ -173,30 +100,38 @@
         const list = document.getElementById('salesList');
         list.innerHTML = '';
         
-        let totalPengeluaran = 0; // Semua modal belanja
-        let totalPendapatan = 0;  // Uang hasil penjualan (hanya yg laku)
-        let totalProfit = 0;      // Keuntungan bersih (hanya yg laku)
+        let totalPengeluaran = 0; 
+        let totalPendapatan = 0;  
+        let totalProfit = 0;      
         let soldCount = 0;
 
         inventory.forEach(item => {
-            // 1. Hitung total pengeluaran (Semua unit dibeli pakai uang/modal, kan?)
             totalPengeluaran += item.beli;
 
-            // 2. Filter hanya unit yang statusnya TERJUAL
             if (item.status === 'Terjual') {
                 soldCount++;
-                totalPendapatan += item.jual;
                 
-                const profitUnit = item.jual - item.beli;
+                // UPDATE: Menggunakan hargaLaku (hasil nego) jika ada, jika tidak pakai target awal
+                const hargaFinal = item.hargaLaku ? item.hargaLaku : item.jual;
+                
+                totalPendapatan += hargaFinal;
+                const profitUnit = hargaFinal - item.beli;
                 totalProfit += profitUnit;
 
-                // Render kartu riwayat untuk unit yang terjual
+                // Tampilan beda jika target vs laku berbeda
+                let infoNego = '';
+                if (item.hargaLaku && item.hargaLaku !== item.jual) {
+                    const selisih = item.jual - item.hargaLaku;
+                    infoNego = `<span style="color:#ef4444; font-size:0.75rem;">(Nego/Turun: Rp${formatRupiah(selisih)})</span>`;
+                }
+
                 list.innerHTML += `
                     <div class="list-item">
                         <div class="item-header">
                             <div>
                                 <div class="item-title">${item.tipe} ${item.storage || ''}</div>
                                 <span class="date-text">Diinput: ${formatTanggal(item.timestamp)}</span>
+                                ${infoNego}
                             </div>
                             <div class="profit-badge">
                                 <div style="font-size:0.7rem; color:#059669; font-weight:600; text-transform:uppercase;">Untung</div>
@@ -205,18 +140,15 @@
                         </div>
                         <div class="detail-row">
                             <div>Modal: Rp${formatRupiah(item.beli)}</div>
-                            <div>Laku: Rp${formatRupiah(item.jual)}</div>
+                            <div>Laku (Net): Rp${formatRupiah(hargaFinal)}</div>
                         </div>
                     </div>
                 `;
             }
         });
 
-        if (soldCount === 0) {
-            list.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding: 20px;">Belum ada riwayat penjualan unit.</p>`;
-        }
+        if (soldCount === 0) list.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding: 20px;">Belum ada riwayat penjualan unit.</p>`;
 
-        // Update Angka di Dashboard Atas
         document.getElementById('totalPengeluaran').innerText = 'Rp ' + formatRupiah(totalPengeluaran);
         document.getElementById('totalPendapatan').innerText = 'Rp ' + formatRupiah(totalPendapatan);
         document.getElementById('totalProfit').innerText = 'Rp ' + formatRupiah(totalProfit);
