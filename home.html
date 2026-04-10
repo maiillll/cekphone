@@ -3,300 +3,346 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sistem Stok & Profit HP</title>
+    <title>Sistem Stok & QC HP Pro</title>
     <style>
+        /* [CATATAN: BAGIAN CSS SAMA PERSIS SEPERTI SEBELUMNYA] */
         :root {
-            --primary: #2563eb;
-            --success: #16a34a;
-            --danger: #dc2626;
-            --bg: #f8fafc;
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --bg: #f3f4f6;
             --card: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
         }
 
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background: var(--bg); 
-            margin: 0; 
-            padding: 15px; 
-            color: var(--text-main); 
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            margin: 0; padding: 15px; color: var(--text-main); min-height: 100vh;
         }
 
         .container { max-width: 800px; margin: auto; padding-bottom: 50px; }
         
-        h1, h2 { margin-top: 0; }
-        h1 { font-size: 1.5rem; text-align: center; margin-bottom: 20px; }
-        h2 { font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; }
-
-        /* Dashboard Styles - Scrollable on Mobile */
-        .dashboard { 
-            display: flex; 
-            gap: 10px; 
-            overflow-x: auto; 
-            padding-bottom: 10px; 
-            margin-bottom: 20px;
-            scrollbar-width: none; /* Firefox */
+        .header-title {
+            text-align: center; font-size: 1.6rem; font-weight: 800;
+            background: -webkit-linear-gradient(45deg, var(--primary), #ec4899);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;
         }
-        .dashboard::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+        .dashboard { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 10px; scrollbar-width: none; }
+        .dashboard::-webkit-scrollbar { display: none; }
         
         .stat-card { 
-            background: var(--card); 
-            padding: 15px; 
-            border-radius: 12px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-            border-left: 4px solid var(--primary); 
-            min-width: 140px;
-            flex: 1;
+            background: var(--card); padding: 18px; border-radius: 16px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); min-width: 130px; flex: 1; position: relative; overflow: hidden;
         }
-        .stat-card h3 { margin: 0; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); }
-        .stat-card p { margin: 8px 0 0; font-size: 1.2rem; font-weight: bold; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
+        .stat-card:nth-child(1)::before { background: var(--primary); }
+        .stat-card:nth-child(2)::before { background: var(--success); }
+        .stat-card:nth-child(3)::before { background: #f59e0b; }
 
-        /* Card Layout */
-        .card { 
-            background: var(--card); 
-            padding: 15px; 
-            border-radius: 12px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-            margin-bottom: 20px; 
-        }
+        .stat-card h3 { margin: 0; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;}
+        .stat-card p { margin: 8px 0 0; font-size: 1.25rem; font-weight: 800; color: var(--text-main); }
 
-        /* Form Styles for Mobile */
-        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            margin-bottom: 15px; 
-            border: 1px solid var(--border); 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            font-size: 16px; /* 16px mencegah auto-zoom di iOS */
-            background-color: #fcfcfc;
+        .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        h2 { font-size: 1.15rem; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-top: 0; margin-bottom: 15px; color: var(--text-main); }
+
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+        input[type="text"], input[type="number"], select { 
+            width: 100%; padding: 14px; margin-bottom: 15px; border: 1.5px solid var(--border); border-radius: 10px; 
+            box-sizing: border-box; font-size: 16px; background-color: #f9fafb; transition: all 0.3s ease;
         }
-        input:focus, select:focus { outline: none; border-color: var(--primary); background-color: #fff; }
+        input:focus, select:focus { outline: none; border-color: var(--primary); background-color: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
         
-        .flex-row { display: flex; gap: 10px; }
+        .flex-row { display: flex; gap: 12px; }
         .flex-row > div { flex: 1; }
 
-        .btn { 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            padding: 14px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            width: 100%; 
-            font-size: 1rem;
-            margin-top: 5px;
+        .qc-instruction { font-size: 0.8rem; color: var(--danger); font-weight: bold; margin-bottom: 10px; text-align: center; background: var(--danger-bg); padding: 8px; border-radius: 8px;}
+        .qc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .qc-checkbox { display: none; }
+        .qc-label {
+            display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 8px;
+            background-color: #f3f4f6; border: 2px solid transparent; border-radius: 12px; font-size: 0.85rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease; text-align: center; color: var(--text-muted); user-select: none;
         }
-        .btn:active { opacity: 0.8; transform: scale(0.98); }
+        .qc-checkbox:checked + .qc-label {
+            background-color: var(--danger-bg); border-color: var(--danger); color: var(--danger); box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+        }
 
-        /* Inventory List Style (Pengganti Table) */
-        .list-container { display: flex; flex-direction: column; gap: 12px; }
+        .btn { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); 
+            color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; 
+            font-weight: 800; width: 100%; font-size: 1.05rem; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.97); }
+
+        .list-container { display: flex; flex-direction: column; gap: 15px; }
         .list-item { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 10px; 
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; 
+            display: flex; flex-direction: column; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
         .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .item-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 4px; }
-        .item-qc { font-size: 0.8rem; color: var(--text-muted); }
-        .item-price { font-weight: 700; color: var(--success); font-size: 1.1rem; }
+        .item-title { font-weight: 800; font-size: 1.15rem; margin-bottom: 6px; color: var(--text-main); }
+        .item-price { font-weight: 800; color: var(--success); font-size: 1.2rem; background: #ecfdf5; padding: 4px 10px; border-radius: 8px;}
         
-        .item-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border); padding-top: 10px; }
+        .item-details { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.8rem; margin-bottom: 5px; }
+        .detail-pill { background: #f3f4f6; padding: 4px 10px; border-radius: 20px; font-weight: 600; color: var(--text-muted); border: 1px solid #e5e7eb;}
         
-        .badge { padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.75rem; cursor: pointer; text-align: center; }
+        .qc-result-ok { font-size: 0.85rem; color: #047857; background: #d1fae5; padding: 6px 10px; border-radius: 8px; font-weight: 700; display: inline-block;}
+        .qc-result-minus { font-size: 0.85rem; color: #b91c1c; background: #fee2e2; padding: 6px 10px; border-radius: 8px; font-weight: 700; display: inline-block;}
+        
+        .item-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border); padding-top: 12px; }
+        
+        .badge { padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer; text-align: center; }
         .ready { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .sold { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .sold { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
         
-        .btn-del { background: transparent; color: var(--danger); border: none; font-size: 0.85rem; font-weight: bold; cursor: pointer; padding: 5px; }
+        .btn-del { background: #fee2e2; color: var(--danger); border: none; font-size: 0.85rem; font-weight: bold; cursor: pointer; padding: 8px 12px; border-radius: 8px; }
 
-        /* Floating action button feel for 'Tambah' on very small screens could be added here, but keeping it flat is cleaner */
+        /* Loading indicator */
+        #loader { text-align: center; color: var(--primary); font-weight: bold; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Data Penjualan HP</h1>
+    <div class="header-title">X-TEN'S INVENTORY 📱</div>
+    <div id="loader">🔄 Menghubungkan ke Database...</div>
 
     <div class="dashboard">
         <div class="stat-card">
             <h3>Unit Ready</h3>
             <p id="countReady">0</p>
         </div>
-        <div class="stat-card" style="border-left-color: var(--success);">
+        <div class="stat-card">
             <h3>Nilai Modal</h3>
             <p id="totalModal">Rp 0</p>
         </div>
-        <div class="stat-card" style="border-left-color: #f59e0b;">
+        <div class="stat-card">
             <h3>Est. Profit</h3>
             <p id="totalProfit">Rp 0</p>
         </div>
     </div>
 
     <div class="card">
-        <h2>Input Unit Baru</h2>
+        <h2>✨ Input Unit Baru</h2>
         <form id="hpForm">
             <label>Merk & Tipe HP</label>
-            <input type="text" id="tipe" placeholder="Contoh: iPhone 11 64GB" required>
-            
+            <input type="text" id="tipe" placeholder="Contoh: iPhone 13 Pro Max 256GB" required>
             <div class="flex-row">
-                <div>
-                    <label>Harga Beli (Modal)</label>
-                    <input type="number" id="hBeli" placeholder="Rp" required>
-                </div>
-                <div>
-                    <label>Harga Jual (Target)</label>
-                    <input type="number" id="hJual" placeholder="Rp" required>
-                </div>
+                <div><label>Modal (Rp)</label><input type="number" id="hBeli" required></div>
+                <div><label>Jual (Rp)</label><input type="number" id="hJual" required></div>
             </div>
-
             <div class="flex-row">
                 <div>
                     <label>Kondisi Layar</label>
                     <select id="qcLayar">
-                        <option>Mulus</option>
-                        <option>Shadow</option>
-                        <option>Retak</option>
-                        <option>Baret</option>
+                        <option>Mulus / Normal</option><option>Shadow Tipis</option><option>Shadow Parah</option><option>Retak Kaca</option><option>Baret Dalam</option>
                     </select>
                 </div>
                 <div>
-                    <label>BH / Baterai</label>
-                    <input type="text" id="qcBat" placeholder="Cth: 85%">
+                    <label>Kondisi Body</label>
+                    <select id="qcBody">
+                        <option>Mulus (Like New)</option><option>Lecet Pemakaian</option><option>Dent / Penyok</option><option>Backglass Pecah</option>
+                    </select>
                 </div>
             </div>
+            <div class="flex-row">
+                <div>
+                    <label>Status Saat Ini</label>
+                    <select id="status">
+                        <option value="Ready">Ready (Tersedia)</option><option value="Terjual">Terjual (Laku)</option>
+                    </select>
+                </div>
+                <div><label>Baterai (BH/Kondisi)</label><input type="text" id="qcBat" required></div>
+            </div>
 
-            <label>Status Saat Ini</label>
-            <select id="status">
-                <option value="Ready">Ready (Stok Tersedia)</option>
-                <option value="Terjual">Terjual (Sudah Laku)</option>
-            </select>
-
-            <button type="submit" class="btn">Simpan Data</button>
+            <h2 style="margin-top: 15px;">🔍 Checklist Kelengkapan & Fungsi</h2>
+            <div class="qc-instruction">TAP PADA ITEM JIKA FUNGSI RUSAK / MINUS!</div>
+            <div class="qc-grid">
+                <label><input type="checkbox" name="minusList" value="Kamera Depan" class="qc-checkbox"><span class="qc-label">🤳 Kamera Depan</span></label>
+                <label><input type="checkbox" name="minusList" value="Kamera Belakang" class="qc-checkbox"><span class="qc-label">📸 Kamera Blkg</span></label>
+                <label><input type="checkbox" name="minusList" value="Flash/Senter" class="qc-checkbox"><span class="qc-label">🔦 Flash/Senter</span></label>
+                <label><input type="checkbox" name="minusList" value="Wi-Fi / Bluetooth" class="qc-checkbox"><span class="qc-label">📶 Wi-Fi & BT</span></label>
+                <label><input type="checkbox" name="minusList" value="Kompas/GPS" class="qc-checkbox"><span class="qc-label">🧭 Kompas</span></label>
+                <label><input type="checkbox" name="minusList" value="TrueTone" class="qc-checkbox"><span class="qc-label">☀️ TrueTone</span></label>
+                <label><input type="checkbox" name="minusList" value="Face ID / FP" class="qc-checkbox"><span class="qc-label">🧑‍🦲 Face ID / FP</span></label>
+                <label><input type="checkbox" name="minusList" value="Sensor Proximity" class="qc-checkbox"><span class="qc-label">🧲 Proximity</span></label>
+                <label><input type="checkbox" name="minusList" value="Microfon" class="qc-checkbox"><span class="qc-label">🎤 Microfon</span></label>
+                <label><input type="checkbox" name="minusList" value="Getar/Vibrate" class="qc-checkbox"><span class="qc-label">📳 Getar/Vibe</span></label>
+                <label><input type="checkbox" name="minusList" value="Tombol Power" class="qc-checkbox"><span class="qc-label">🔘 T. Power</span></label>
+                <label><input type="checkbox" name="minusList" value="Tombol Volume" class="qc-checkbox"><span class="qc-label">🔉 T. Volume</span></label>
+                <label><input type="checkbox" name="minusList" value="Switch DND" class="qc-checkbox"><span class="qc-label">🔕 Switch DND</span></label>
+                <label><input type="checkbox" name="minusList" value="Speaker Atas" class="qc-checkbox"><span class="qc-label">🔊 Spk Atas</span></label>
+                <label><input type="checkbox" name="minusList" value="Speaker Bawah" class="qc-checkbox"><span class="qc-label">🔊 Spk Bawah</span></label>
+            </div>
+            <button type="submit" class="btn" id="btnSubmit" disabled>Simpan ke Database</button>
         </form>
     </div>
 
-    <div class="card" style="background: transparent; box-shadow: none; padding: 0;">
-        <h2>Daftar Unit & QC</h2>
-        <div class="list-container" id="inventoryList">
-            </div>
+    <div style="background: transparent; box-shadow: none; padding: 0;">
+        <h2>📋 Daftar Unit & Hasil QC</h2>
+        <div class="list-container" id="inventoryList"></div>
     </div>
 </div>
 
-<script>
-    // Inisialisasi data dari LocalStorage
-    let inventory = JSON.parse(localStorage.getItem('hp_data_mobile')) || [];
+<script type="module">
+    // 1. Import module Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+    // 2. GANTI INI DENGAN FIREBASE CONFIG ANDA DARI CONSOLE!
+    const firebaseConfig = {
+      apiKey: "API_KEY_ANDA",
+      authDomain: "PROJECT_ANDA.firebaseapp.com",
+      databaseURL: "https://PROJECT_ANDA-default-rtdb.firebaseio.com",
+      projectId: "PROJECT_ANDA",
+      storageBucket: "PROJECT_ANDA.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "APP_ID_ANDA"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const inventoryRef = ref(db, 'inventory'); // Nama tabel di database
+
+    // Elements
     const form = document.getElementById('hpForm');
-    
-    // Fungsi Submit Data
-    form.addEventListener('submit', (e) => {
+    const loader = document.getElementById('loader');
+    const btnSubmit = document.getElementById('btnSubmit');
+
+    // 3. LISTEN DATA REAL-TIME (Sinkronisasi Antar Karyawan)
+    onValue(inventoryRef, (snapshot) => {
+        loader.style.display = 'none';
+        btnSubmit.disabled = false;
+        
+        const data = snapshot.val();
+        let inventoryData = [];
+        
+        if (data) {
+            // Ubah object firebase jadi array
+            inventoryData = Object.keys(data).map(key => ({
+                id: key, // ID unik dari firebase
+                ...data[key]
+            })).reverse(); // Reverse agar data terbaru di atas
+        }
+        
+        renderUI(inventoryData);
+    }, (error) => {
+        loader.innerText = "Gagal terhubung ke Database!";
+        loader.style.color = "red";
+    });
+
+    // 4. SIMPAN DATA KE CLOUD
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = "Menyimpan...";
+
+        let minusArray = [];
+        document.querySelectorAll('input[name="minusList"]:checked').forEach((cb) => minusArray.push(cb.value));
         
         const item = {
-            id: Date.now(),
             tipe: document.getElementById('tipe').value,
             beli: parseInt(document.getElementById('hBeli').value),
             jual: parseInt(document.getElementById('hJual').value),
             status: document.getElementById('status').value,
             layar: document.getElementById('qcLayar').value,
-            baterai: document.getElementById('qcBat').value || '-'
+            body: document.getElementById('qcBody').value,
+            baterai: document.getElementById('qcBat').value,
+            minus: minusArray,
+            timestamp: Date.now() // Catat waktu input
         };
         
-        inventory.unshift(item); // Masukkan data baru di posisi paling atas
-        updateUI();
-        form.reset();
-        
-        // Scroll ke daftar unit
-        document.getElementById('inventoryList').scrollIntoView({ behavior: 'smooth' });
+        try {
+            await push(inventoryRef, item); // Kirim ke Firebase
+            form.reset();
+            document.querySelectorAll('.qc-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('inventoryList').scrollIntoView({ behavior: 'smooth' });
+        } catch (error) {
+            alert("Gagal menyimpan data!");
+            console.error(error);
+        } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "Simpan ke Database";
+        }
     });
 
-    // Fungsi Hapus Data
-    function deleteItem(id) {
-        if(confirm("Yakin ingin menghapus data unit ini?")) {
-            inventory = inventory.filter(item => item.id !== id);
-            updateUI();
+    // 5. HAPUS DATA DARI CLOUD
+    window.deleteItem = function(id) {
+        if(confirm("Hapus data unit ini secara permanen untuk semua karyawan?")) {
+            const itemRef = ref(db, 'inventory/' + id);
+            remove(itemRef);
         }
     }
 
-    // Fungsi Ubah Status (Ready <-> Terjual)
-    function toggleStatus(id) {
-        const index = inventory.findIndex(item => item.id === id);
-        if (index !== -1) {
-            inventory[index].status = inventory[index].status === 'Ready' ? 'Terjual' : 'Ready';
-            updateUI();
-        }
+    // 6. UPDATE STATUS DI CLOUD
+    window.toggleStatus = function(id, currentStatus) {
+        const itemRef = ref(db, 'inventory/' + id);
+        const newStatus = currentStatus === 'Ready' ? 'Terjual' : 'Ready';
+        update(itemRef, { status: newStatus });
     }
 
-    // Fungsi Format Rupiah
-    function formatRupiah(angka) {
-        return angka.toLocaleString('id-ID');
-    }
+    function formatRupiah(angka) { return angka.toLocaleString('id-ID'); }
 
-    // Render Tampilan UI
-    function updateUI() {
-        // Simpan ke LocalStorage
-        localStorage.setItem('hp_data_mobile', JSON.stringify(inventory));
-        
+    // Render HTML (Logic sama seperti sebelumnya, hanya menerima parameter array)
+    function renderUI(inventory) {
         const listContainer = document.getElementById('inventoryList');
         listContainer.innerHTML = '';
         
-        let readyCount = 0;
-        let totalModal = 0;
-        let estimasiProfit = 0;
+        let readyCount = 0; let totalModal = 0; let estimasiProfit = 0;
 
         if (inventory.length === 0) {
-            listContainer.innerHTML = `<p style="text-align:center; color:#64748b; font-size: 0.9rem;">Belum ada data unit. Silakan input di atas.</p>`;
+            listContainer.innerHTML = `<p style="text-align:center; color:var(--text-muted);">Belum ada data di Database.</p>`;
         }
 
-        // Looping Data
         inventory.forEach(item => {
             const isReady = item.status === 'Ready';
             
-            // Hitung Dashboard HANYA untuk unit yang Ready
             if(isReady) {
-                readyCount++;
-                totalModal += item.beli;
-                estimasiProfit += (item.jual - item.beli);
+                readyCount++; totalModal += item.beli; estimasiProfit += (item.jual - item.beli);
             }
 
-            // Desain Card Mobile
+            // Pastikan array minus ada walau kosong (handling data lama)
+            const minusList = item.minus || [];
+            let qcVisual = minusList.length === 0 
+                ? `<div class="qc-result-ok">✅ Semua Fungsi Normal</div>` 
+                : `<div class="qc-result-minus">⚠️ Minus: ${minusList.join(', ')}</div>`;
+
             const cardHTML = `
-                <div class="list-item">
+                <div class="list-item" style="opacity: ${isReady ? '1' : '0.6'};">
                     <div class="item-header">
                         <div>
                             <div class="item-title">${item.tipe}</div>
-                            <div class="item-qc">Layar: ${item.layar} | Bat: ${item.baterai}</div>
+                            <div class="item-details">
+                                <span class="detail-pill">Layar: ${item.layar}</span>
+                                <span class="detail-pill">Body: ${item.body}</span>
+                                <span class="detail-pill">BH: ${item.baterai}</span>
+                            </div>
+                            ${qcVisual}
                         </div>
-                        <div class="item-price">Rp ${formatRupiah(item.jual)}</div>
+                        <div class="item-price">Rp${formatRupiah(item.jual)}</div>
                     </div>
-                    
                     <div class="item-footer">
-                        <span class="badge ${isReady ? 'ready' : 'sold'}" onclick="toggleStatus(${item.id})">
-                            ${isReady ? '🟢 Ready' : '🔴 Terjual'}
+                        <span class="badge ${isReady ? 'ready' : 'sold'}" onclick="toggleStatus('${item.id}', '${item.status}')">
+                            ${isReady ? '🟢 Ready Stok' : '⚪ Terjual'}
                         </span>
-                        <button onclick="deleteItem(${item.id})" class="btn-del">Hapus</button>
+                        <button onclick="deleteItem('${item.id}')" class="btn-del">🗑️ Hapus</button>
                     </div>
                 </div>
             `;
             listContainer.innerHTML += cardHTML;
         });
 
-        // Update Angka Dashboard
         document.getElementById('countReady').innerText = readyCount;
         document.getElementById('totalModal').innerText = 'Rp ' + formatRupiah(totalModal);
         document.getElementById('totalProfit').innerText = 'Rp ' + formatRupiah(estimasiProfit);
     }
-
-    // Panggil fungsi render saat halaman pertama kali dibuka
-    updateUI();
 </script>
 
 </body>
