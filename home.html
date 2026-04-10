@@ -4,106 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>X-TEN'S INVENTORY | Pro</title>
-    <div style="text-align: center; margin-bottom: 20px;">
-    <a href="penjualan.html" style="background: #10b981; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);">
-        💰 Buka Laporan Penjualan ➡
-    </a>
-</div>
     <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-light: #6366f1;
-            --success: #10b981;
-            --danger: #ef4444;
-            --danger-bg: #fef2f2;
-            --bg: #f3f4f6;
-            --card: #ffffff;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --border: #e5e7eb;
-        }
-
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            margin: 0; padding: 15px; color: var(--text-main); min-height: 100vh;
-        }
-
+        :root { --primary: #4f46e5; --primary-light: #6366f1; --success: #10b981; --danger: #ef4444; --danger-bg: #fef2f2; --bg: #f3f4f6; --card: #ffffff; --text-main: #1f2937; --text-muted: #6b7280; --border: #e5e7eb; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%); margin: 0; padding: 15px; color: var(--text-main); min-height: 100vh; }
         .container { max-width: 800px; margin: auto; padding-bottom: 50px; }
-        
-        .header-title {
-            text-align: center; font-size: 1.6rem; font-weight: 800;
-            background: -webkit-linear-gradient(45deg, var(--primary), #ec4899);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;
-        }
-
+        .header-title { text-align: center; font-size: 1.6rem; font-weight: 800; background: -webkit-linear-gradient(45deg, var(--primary), #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; }
         .dashboard { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 10px; scrollbar-width: none; }
         .dashboard::-webkit-scrollbar { display: none; }
-        
-        .stat-card { 
-            background: var(--card); padding: 18px; border-radius: 16px; 
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); min-width: 130px; flex: 1; position: relative; overflow: hidden;
-        }
+        .stat-card { background: var(--card); padding: 18px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); min-width: 130px; flex: 1; position: relative; overflow: hidden; }
         .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
         .stat-card:nth-child(1)::before { background: var(--primary); }
         .stat-card:nth-child(2)::before { background: var(--success); }
         .stat-card:nth-child(3)::before { background: #f59e0b; }
-
         .stat-card h3 { margin: 0; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;}
         .stat-card p { margin: 8px 0 0; font-size: 1.25rem; font-weight: 800; color: var(--text-main); }
-
         .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 25px; }
         h2 { font-size: 1.15rem; border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-top: 0; margin-bottom: 15px; color: var(--text-main); }
-
         label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
-        input[type="text"], input[type="number"], select { 
-            width: 100%; padding: 14px; margin-bottom: 15px; border: 1.5px solid var(--border); border-radius: 10px; 
-            box-sizing: border-box; font-size: 16px; background-color: #f9fafb; transition: all 0.3s ease;
-        }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 14px; margin-bottom: 15px; border: 1.5px solid var(--border); border-radius: 10px; box-sizing: border-box; font-size: 16px; background-color: #f9fafb; transition: all 0.3s ease; }
         input:focus, select:focus { outline: none; border-color: var(--primary); background-color: #fff; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
-        
-        .flex-row { display: flex; gap: 12px; }
-        .flex-row > div { flex: 1; }
-
+        .flex-row { display: flex; gap: 12px; } .flex-row > div { flex: 1; }
         .qc-instruction { font-size: 0.8rem; color: var(--danger); font-weight: bold; margin-bottom: 10px; text-align: center; background: var(--danger-bg); padding: 8px; border-radius: 8px;}
         .qc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 20px; }
         .qc-checkbox { display: none; }
-        .qc-label {
-            display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px;
-            background-color: #f3f4f6; border: 2px solid transparent; border-radius: 10px; font-size: 0.8rem;
-            font-weight: 600; cursor: pointer; transition: all 0.2s ease; text-align: center; color: var(--text-muted); user-select: none;
-        }
-        .qc-checkbox:checked + .qc-label {
-            background-color: var(--danger-bg); border-color: var(--danger); color: var(--danger); box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
-        }
-
-        .btn { 
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); 
-            color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; 
-            font-weight: 800; width: 100%; font-size: 1.05rem; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
-        }
-
-        .list-item { 
-            background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; 
-            display: flex; flex-direction: column; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 15px;
-        }
+        .qc-label { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px; background-color: #f3f4f6; border: 2px solid transparent; border-radius: 10px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; text-align: center; color: var(--text-muted); user-select: none; }
+        .qc-checkbox:checked + .qc-label { background-color: var(--danger-bg); border-color: var(--danger); color: var(--danger); box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1); }
+        .btn { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; font-weight: 800; width: 100%; font-size: 1.05rem; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); }
+        .list-item { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 15px; }
         .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .item-title { font-weight: 800; font-size: 1.15rem; color: var(--text-main); margin-bottom: 4px; }
-        .item-price { font-weight: 800; color: var(--success); font-size: 1.2rem; background: #ecfdf5; padding: 4px 10px; border-radius: 8px;}
-        
+        .item-price { font-weight: 800; color: var(--success); font-size: 1.2rem; background: #ecfdf5; padding: 8px 12px; border-radius: 8px; text-align: right;}
         .detail-pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
         .pill { padding: 4px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-        .pill-storage { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
-        .pill-region { background: #fdf2f8; color: #be185d; border: 1px solid #fce7f3; }
-        .pill-standard { background: #f3f4f6; color: #4b5563; }
-        
+        .pill-storage { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; } .pill-region { background: #fdf2f8; color: #be185d; border: 1px solid #fce7f3; } .pill-standard { background: #f3f4f6; color: #4b5563; }
         .qc-result-ok { font-size: 0.85rem; color: #047857; background: #d1fae5; padding: 6px 10px; border-radius: 8px; font-weight: 700; margin-top: 5px; display: inline-block;}
         .qc-result-minus { font-size: 0.85rem; color: #b91c1c; background: #fee2e2; padding: 6px 10px; border-radius: 8px; font-weight: 700; margin-top: 5px; display: inline-block; line-height: 1.4;}
-        
         .item-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border); padding-top: 12px; }
         .badge { padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
-        .ready { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-        .sold { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+        .ready { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; } .sold { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
         .btn-del { background: #fee2e2; color: var(--danger); border: none; font-size: 0.85rem; font-weight: bold; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
@@ -111,6 +49,13 @@
 
 <div class="container">
     <div class="header-title">X-TEN'S INVENTORY 📱</div>
+    
+    <div style="text-align: center; margin-bottom: 25px;">
+        <a href="penjualan.html" style="background: #10b981; color: white; text-decoration: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);">
+            💰 Buka Laporan Penjualan ➡
+        </a>
+    </div>
+
     <div id="loader" style="text-align:center; color:var(--primary); font-weight:bold; margin-bottom: 10px;">🔄 Menghubungkan ke Database...</div>
 
     <div class="dashboard">
@@ -129,26 +74,20 @@
                 <div>
                     <label>Penyimpanan</label>
                     <select id="storage">
-                        <option value="64GB">64GB</option>
-                        <option value="128GB">128GB</option>
-                        <option value="256GB" selected>256GB</option>
-                        <option value="512GB">512GB</option>
-                        <option value="1TB">1TB</option>
+                        <option value="64GB">64GB</option><option value="128GB">128GB</option><option value="256GB" selected>256GB</option><option value="512GB">512GB</option><option value="1TB">1TB</option>
                     </select>
                 </div>
                 <div>
                     <label>Jenis Garansi</label>
                     <select id="region">
-                        <option value="iBox (Resmi)">iBox (Resmi)</option>
-                        <option value="Inter (All Op)">Inter (All Op)</option>
-                        <option value="Inter (Smartfren)">Inter (Smartfren)</option>
+                        <option value="iBox (Resmi)">iBox (Resmi)</option><option value="Inter (All Op)">Inter (All Op)</option><option value="Inter (Smartfren)">Inter (Smartfren)</option>
                     </select>
                 </div>
             </div>
 
             <div class="flex-row">
                 <div><label>Modal (Rp)</label><input type="number" id="hBeli" required></div>
-                <div><label>Jual (Rp)</label><input type="number" id="hJual" required></div>
+                <div><label>Target Jual (Rp)</label><input type="number" id="hJual" required></div>
             </div>
 
             <div class="flex-row">
@@ -202,7 +141,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Kofigurasi Firebase Asli Anda
     const firebaseConfig = {
       apiKey: "AIzaSyDmi2RvPA_PchOkx9g52uqD-GoXryyxWiQ",
       authDomain: "xtens-inventory.firebaseapp.com",
@@ -216,11 +154,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const inventoryRef = ref(db, 'inventory');
-
     const form = document.getElementById('hpForm');
     const btnSubmit = document.getElementById('btnSubmit');
 
-    // Listener Realtime Firebase
     onValue(inventoryRef, (snapshot) => {
         document.getElementById('loader').style.display = 'none';
         btnSubmit.disabled = false;
@@ -228,14 +164,10 @@
         renderUI(data ? Object.keys(data).map(key => ({ id: key, ...data[key] })).reverse() : []);
     });
 
-    // Simpan Data Baru
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        btnSubmit.disabled = true;
-        btnSubmit.innerText = "Menyimpan...";
-
-        let minusArr = [];
-        document.querySelectorAll('input[name="minusList"]:checked').forEach(cb => minusArr.push(cb.value));
+        btnSubmit.disabled = true; btnSubmit.innerText = "Menyimpan...";
+        let minusArr = []; document.querySelectorAll('input[name="minusList"]:checked').forEach(cb => minusArr.push(cb.value));
         
         const item = {
             tipe: document.getElementById('tipe').value,
@@ -251,44 +183,60 @@
             timestamp: Date.now()
         };
         
-        try {
-            await push(inventoryRef, item);
-            form.reset();
-            document.querySelectorAll('.qc-checkbox').forEach(cb => cb.checked = false);
-        } catch (error) {
-            alert("Gagal menyimpan data! Pastikan Database Rules sudah diset ke True.");
-            console.error(error);
-        } finally {
-            btnSubmit.disabled = false;
-            btnSubmit.innerText = "Simpan ke Database";
-        }
+        try { await push(inventoryRef, item); form.reset(); document.querySelectorAll('.qc-checkbox').forEach(cb => cb.checked = false); } 
+        catch (error) { alert("Gagal menyimpan data!"); } 
+        finally { btnSubmit.disabled = false; btnSubmit.innerText = "Simpan ke Database"; }
     });
 
-    // Fungsi Toggle & Hapus
-    window.toggleStatus = (id, current) => update(ref(db, 'inventory/' + id), { status: current === 'Ready' ? 'Terjual' : 'Ready' });
-    window.deleteItem = (id) => confirm("Hapus permanen unit ini dari database?") && remove(ref(db, 'inventory/' + id));
+    // UPDATE: FUNGSI PROMPT HARGA DEAL
+    window.toggleStatus = (id, currentStatus, targetJual) => {
+        if (currentStatus === 'Ready') {
+            // Munculkan pop-up input harga
+            let inputHarga = prompt("🤝 Berapa harga Deal / Laku untuk unit ini?\n(Silakan ubah angka di bawah jika ada nego):", targetJual);
+            
+            if (inputHarga === null) return; // Batal jika user klik Cancel
+            
+            let hargaLaku = parseInt(inputHarga.toString().replace(/[^0-9]/g, ''));
+            if (isNaN(hargaLaku) || hargaLaku <= 0) {
+                alert("❌ Input harga tidak valid!");
+                return;
+            }
 
-    // Render Tampilan
+            update(ref(db, 'inventory/' + id), { 
+                status: 'Terjual',
+                hargaLaku: hargaLaku // Simpan harga akhir ke Firebase
+            });
+        } else {
+            // Batal jual dan kembalikan ke gudang
+            if(confirm("🔄 Unit ini akan dikembalikan ke status 'Ready'. Lanjutkan?")) {
+                update(ref(db, 'inventory/' + id), { 
+                    status: 'Ready',
+                    hargaLaku: null // Hapus riwayat harga laku
+                });
+            }
+        }
+    };
+
+    window.deleteItem = (id) => confirm("Hapus permanen unit ini?") && remove(ref(db, 'inventory/' + id));
+
     function renderUI(inventory) {
         const list = document.getElementById('inventoryList');
         list.innerHTML = '';
         let ready = 0, modal = 0, profit = 0;
 
-        if (inventory.length === 0) {
-            list.innerHTML = `<p style="text-align:center; color:var(--text-muted);">Belum ada data di Database.</p>`;
-        }
+        if (inventory.length === 0) list.innerHTML = `<p style="text-align:center; color:var(--text-muted);">Belum ada data.</p>`;
 
         inventory.forEach(item => {
             const isReady = item.status === 'Ready';
             if(isReady) { ready++; modal += item.beli; profit += (item.jual - item.beli); }
 
-            // Logika Visual Minus
             const minusList = item.minus || [];
-            const minusStr = minusList.length === 0 
-                ? '<div class="qc-result-ok">✅ Semua Fungsi Normal</div>' 
-                : `<div class="qc-result-minus">⚠️ Minus: ${minusList.join(', ')}</div>`;
+            const minusStr = minusList.length === 0 ? '<div class="qc-result-ok">✅ Semua Fungsi Normal</div>' : `<div class="qc-result-minus">⚠️ Minus: ${minusList.join(', ')}</div>`;
 
-            // Render Card
+            // UPDATE: Menampilkan harga Deal jika sudah terjual
+            const hargaTampil = (item.status === 'Terjual' && item.hargaLaku) ? item.hargaLaku : item.jual;
+            const labelHarga = (item.status === 'Terjual') ? '<div style="font-size:0.75rem; color:#64748b; font-weight:600;">Laku (Net):</div>' : '<div style="font-size:0.75rem; color:#64748b; font-weight:600;">Target Jual:</div>';
+
             list.innerHTML += `
                 <div class="list-item" style="opacity: ${isReady ? '1' : '0.6'}">
                     <div class="item-header">
@@ -303,10 +251,13 @@
                             </div>
                             ${minusStr}
                         </div>
-                        <div class="item-price">Rp${item.jual.toLocaleString('id-ID')}</div>
+                        <div class="item-price">
+                            ${labelHarga}
+                            Rp${hargaTampil.toLocaleString('id-ID')}
+                        </div>
                     </div>
                     <div class="item-footer">
-                        <span class="badge ${isReady ? 'ready' : 'sold'}" onclick="toggleStatus('${item.id}', '${item.status}')">
+                        <span class="badge ${isReady ? 'ready' : 'sold'}" onclick="toggleStatus('${item.id}', '${item.status}', ${item.jual})">
                             ${isReady ? '🟢 Ready Stok' : '⚪ Terjual'}
                         </span>
                         <button onclick="deleteItem('${item.id}')" class="btn-del">🗑️ Hapus</button>
@@ -315,7 +266,6 @@
             `;
         });
 
-        // Update Dashboard
         document.getElementById('countReady').innerText = ready;
         document.getElementById('totalModal').innerText = 'Rp ' + modal.toLocaleString('id-ID');
         document.getElementById('totalProfit').innerText = 'Rp ' + profit.toLocaleString('id-ID');
