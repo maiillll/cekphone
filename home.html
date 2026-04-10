@@ -29,8 +29,9 @@
         .qc-checkbox { display: none; }
         .qc-label { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px; background-color: #f3f4f6; border: 2px solid transparent; border-radius: 10px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; text-align: center; color: var(--text-muted); user-select: none; }
         .qc-checkbox:checked + .qc-label { background-color: var(--danger-bg); border-color: var(--danger); color: var(--danger); box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1); }
-        .btn { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; font-weight: 800; width: 100%; font-size: 1.05rem; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); }
-        .list-item { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 15px; }
+        .btn { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none; padding: 16px; border-radius: 12px; cursor: pointer; font-weight: 800; width: 100%; font-size: 1.05rem; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); transition: transform 0.1s; }
+        .btn:active { transform: scale(0.97); }
+        .list-item { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 15px; transition: opacity 0.3s; }
         .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .item-title { font-weight: 800; font-size: 1.15rem; color: var(--text-main); margin-bottom: 4px; }
         .item-price { font-weight: 800; color: var(--success); font-size: 1.2rem; background: #ecfdf5; padding: 8px 12px; border-radius: 8px; text-align: right;}
@@ -43,9 +44,43 @@
         .badge { padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
         .ready { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; } .sold { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
         .btn-del { background: #fee2e2; color: var(--danger); border: none; font-size: 0.85rem; font-weight: bold; padding: 8px 12px; border-radius: 8px; cursor: pointer; }
+
+        /* KODE CSS UNTUK CUSTOM POPUP MODAL */
+        .modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 9999; 
+            align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; }
+        .modal-box { 
+            background: var(--card); padding: 25px; border-radius: 20px; width: 90%; max-width: 350px; 
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); 
+            transform: scale(0.9) translateY(20px); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
+        .modal-title { margin-top: 0; color: var(--text-main); font-size: 1.2rem; display: flex; align-items: center; gap: 8px;}
+        .modal-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4; }
+        .modal-input { font-size: 1.6rem !important; font-weight: 800; text-align: center; color: var(--success); padding: 15px !important; margin-bottom: 20px !important;}
+        .modal-buttons { display: flex; gap: 10px; }
+        .btn-cancel { background: #f3f4f6; color: var(--text-main); box-shadow: none; border: 1px solid var(--border); }
+        .btn-confirm { background: var(--success); }
     </style>
 </head>
 <body>
+
+<div id="customModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3 class="modal-title">🤝 Harga Deal / Laku</h3>
+        <p class="modal-desc">Sistem mendeteksi unit ini terjual. Silakan ubah nominal di bawah ini jika ada nego (kesepakatan harga baru).</p>
+        
+        <input type="number" id="modalInputHarga" class="modal-input">
+        
+        <div class="modal-buttons">
+            <button onclick="closeModal()" class="btn btn-cancel">Batal Jual</button>
+            <button onclick="confirmSale()" class="btn btn-confirm">Simpan Data ✅</button>
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="header-title">X-TEN'S INVENTORY 📱</div>
@@ -154,6 +189,10 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const inventoryRef = ref(db, 'inventory');
+    
+    // Variabel Global untuk Modal
+    let activeSaleId = null;
+
     const form = document.getElementById('hpForm');
     const btnSubmit = document.getElementById('btnSubmit');
 
@@ -188,34 +227,59 @@
         finally { btnSubmit.disabled = false; btnSubmit.innerText = "Simpan ke Database"; }
     });
 
-    // UPDATE: FUNGSI PROMPT HARGA DEAL
+    // ==========================================
+    // LOGIKA CUSTOM POPUP MODAL
+    // ==========================================
     window.toggleStatus = (id, currentStatus, targetJual) => {
         if (currentStatus === 'Ready') {
-            // Munculkan pop-up input harga
-            let inputHarga = prompt("🤝 Berapa harga Deal / Laku untuk unit ini?\n(Silakan ubah angka di bawah jika ada nego):", targetJual);
+            // Persiapkan data dan Tampilkan Modal
+            activeSaleId = id;
+            document.getElementById('modalInputHarga').value = targetJual;
             
-            if (inputHarga === null) return; // Batal jika user klik Cancel
+            const modal = document.getElementById('customModal');
+            modal.style.display = 'flex';
+            // Timeout kecil agar transisi CSS berjalan mulus
+            setTimeout(() => { modal.classList.add('active'); }, 10);
             
-            let hargaLaku = parseInt(inputHarga.toString().replace(/[^0-9]/g, ''));
-            if (isNaN(hargaLaku) || hargaLaku <= 0) {
-                alert("❌ Input harga tidak valid!");
-                return;
-            }
-
-            update(ref(db, 'inventory/' + id), { 
-                status: 'Terjual',
-                hargaLaku: hargaLaku // Simpan harga akhir ke Firebase
-            });
         } else {
-            // Batal jual dan kembalikan ke gudang
-            if(confirm("🔄 Unit ini akan dikembalikan ke status 'Ready'. Lanjutkan?")) {
-                update(ref(db, 'inventory/' + id), { 
-                    status: 'Ready',
-                    hargaLaku: null // Hapus riwayat harga laku
-                });
+            // Batal jual dan kembalikan ke gudang (Pakai bawaan browser karena hanya peringatan)
+            if(confirm("🔄 Unit ini akan dikembalikan ke stok gudang (Ready). Lanjutkan?")) {
+                update(ref(db, 'inventory/' + id), { status: 'Ready', hargaLaku: null });
             }
         }
     };
+
+    window.closeModal = () => {
+        const modal = document.getElementById('customModal');
+        modal.classList.remove('active');
+        // Tunggu animasi selesai baru di-hide
+        setTimeout(() => { 
+            modal.style.display = 'none'; 
+            activeSaleId = null; 
+        }, 300); 
+    };
+
+    window.confirmSale = () => {
+        if (!activeSaleId) return;
+        const inputVal = document.getElementById('modalInputHarga').value;
+        let hargaLaku = parseInt(inputVal);
+        
+        if (isNaN(hargaLaku) || hargaLaku <= 0) {
+            alert("❌ Nominal harga tidak valid!");
+            return;
+        }
+
+        // Update Firebase
+        update(ref(db, 'inventory/' + activeSaleId), { 
+            status: 'Terjual',
+            hargaLaku: hargaLaku 
+        }).then(() => {
+            closeModal(); // Tutup modal jika sukses
+        }).catch(err => {
+            alert("Gagal mengupdate status: " + err.message);
+        });
+    };
+    // ==========================================
 
     window.deleteItem = (id) => confirm("Hapus permanen unit ini?") && remove(ref(db, 'inventory/' + id));
 
@@ -233,7 +297,6 @@
             const minusList = item.minus || [];
             const minusStr = minusList.length === 0 ? '<div class="qc-result-ok">✅ Semua Fungsi Normal</div>' : `<div class="qc-result-minus">⚠️ Minus: ${minusList.join(', ')}</div>`;
 
-            // UPDATE: Menampilkan harga Deal jika sudah terjual
             const hargaTampil = (item.status === 'Terjual' && item.hargaLaku) ? item.hargaLaku : item.jual;
             const labelHarga = (item.status === 'Terjual') ? '<div style="font-size:0.75rem; color:#64748b; font-weight:600;">Laku (Net):</div>' : '<div style="font-size:0.75rem; color:#64748b; font-weight:600;">Target Jual:</div>';
 
