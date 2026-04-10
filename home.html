@@ -1,276 +1,302 @@
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Inventori & QC Handphone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Stok & Profit HP</title>
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --border-color: #dee2e6;
+            --primary: #2563eb;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: #333;
-            margin: 0;
-            padding: 20px;
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 15px; 
+            color: var(--text-main); 
         }
 
-        .container {
-            max-width: 1000px;
-            margin: auto;
-        }
+        .container { max-width: 800px; margin: auto; padding-bottom: 50px; }
+        
+        h1, h2 { margin-top: 0; }
+        h1 { font-size: 1.5rem; text-align: center; margin-bottom: 20px; }
+        h2 { font-size: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+        /* Dashboard Styles - Scrollable on Mobile */
+        .dashboard { 
+            display: flex; 
+            gap: 10px; 
+            overflow-x: auto; 
+            padding-bottom: 10px; 
+            margin-bottom: 20px;
+            scrollbar-width: none; /* Firefox */
         }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        h2 {
-            margin-top: 0;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            color: #212529;
-            font-size: 1.25rem;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .form-group {
+        .dashboard::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+        
+        .stat-card { 
+            background: var(--card); 
+            padding: 15px; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            border-left: 4px solid var(--primary); 
+            min-width: 140px;
             flex: 1;
-            min-width: 200px;
-            margin-bottom: 15px;
+        }
+        .stat-card h3 { margin: 0; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); }
+        .stat-card p { margin: 8px 0 0; font-size: 1.2rem; font-weight: bold; }
+
+        /* Card Layout */
+        .card { 
+            background: var(--card); 
+            padding: 15px; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+            margin-bottom: 20px; 
         }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            font-size: 0.9rem;
+        /* Form Styles for Mobile */
+        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 15px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 16px; /* 16px mencegah auto-zoom di iOS */
+            background-color: #fcfcfc;
         }
+        input:focus, select:focus { outline: none; border-color: var(--primary); background-color: #fff; }
+        
+        .flex-row { display: flex; gap: 10px; }
+        .flex-row > div { flex: 1; }
 
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-family: inherit;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            background: #f1f3f5;
-            padding: 15px;
-            border-radius: 5px;
-        }
-
-        .checkbox-group label {
-            font-weight: normal;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
+        .btn { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 14px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            width: 100%; 
             font-size: 1rem;
-            font-weight: bold;
-            width: 100%;
-            transition: background 0.3s;
+            margin-top: 5px;
         }
+        .btn:active { opacity: 0.8; transform: scale(0.98); }
 
-        button:hover {
-            background-color: #0b5ed7;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th, td {
-            border: 1px solid var(--border-color);
+        /* Inventory List Style (Pengganti Table) */
+        .list-container { display: flex; flex-direction: column; gap: 12px; }
+        .list-item { 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-radius: 10px; 
             padding: 12px;
-            text-align: left;
-            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
+        .item-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .item-title { font-weight: bold; font-size: 1.05rem; margin-bottom: 4px; }
+        .item-qc { font-size: 0.8rem; color: var(--text-muted); }
+        .item-price { font-weight: 700; color: var(--success); font-size: 1.1rem; }
+        
+        .item-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border); padding-top: 10px; }
+        
+        .badge { padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.75rem; cursor: pointer; text-align: center; }
+        .ready { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .sold { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        
+        .btn-del { background: transparent; color: var(--danger); border: none; font-size: 0.85rem; font-weight: bold; cursor: pointer; padding: 5px; }
 
-        th {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .badge-masuk { background: #198754; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; }
-        .badge-keluar { background: #dc3545; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; }
+        /* Floating action button feel for 'Tambah' on very small screens could be added here, but keeping it flat is cleaner */
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <h1>Sistem Data Penjualan & QC Handphone</h1>
-        <p>Manajemen unit masuk, keluar, dan pengecekan kondisi perangkat</p>
+    <h1>Data Penjualan HP</h1>
+
+    <div class="dashboard">
+        <div class="stat-card">
+            <h3>Unit Ready</h3>
+            <p id="countReady">0</p>
+        </div>
+        <div class="stat-card" style="border-left-color: var(--success);">
+            <h3>Nilai Modal</h3>
+            <p id="totalModal">Rp 0</p>
+        </div>
+        <div class="stat-card" style="border-left-color: #f59e0b;">
+            <h3>Est. Profit</h3>
+            <p id="totalProfit">Rp 0</p>
+        </div>
     </div>
 
     <div class="card">
-        <h2>1. Data Transaksi Unit</h2>
-        <form id="formTransaksi">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="jenisTransaksi">Jenis Transaksi</label>
-                    <select id="jenisTransaksi" name="jenisTransaksi" required>
-                        <option value="beli">Unit Masuk (Pembelian)</option>
-                        <option value="jual">Unit Keluar (Penjualan)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="tanggal">Tanggal Transaksi</label>
-                    <input type="date" id="tanggal" name="tanggal" required>
-                </div>
-            </div>
+        <h2>Input Unit Baru</h2>
+        <form id="hpForm">
+            <label>Merk & Tipe HP</label>
+            <input type="text" id="tipe" placeholder="Contoh: iPhone 11 64GB" required>
             
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="merkTipe">Merk & Tipe HP</label>
-                    <input type="text" id="merkTipe" placeholder="Cth: iPhone 13 Pro 128GB" required>
+            <div class="flex-row">
+                <div>
+                    <label>Harga Beli (Modal)</label>
+                    <input type="number" id="hBeli" placeholder="Rp" required>
                 </div>
-                <div class="form-group">
-                    <label for="imei">Nomor IMEI</label>
-                    <input type="text" id="imei" placeholder="Masukkan 15 digit IMEI" required>
-                </div>
-                <div class="form-group">
-                    <label for="harga">Harga (Rp)</label>
-                    <input type="number" id="harga" placeholder="Cth: 12000000" required>
+                <div>
+                    <label>Harga Jual (Target)</label>
+                    <input type="number" id="hJual" placeholder="Rp" required>
                 </div>
             </div>
 
-            <h2 style="margin-top: 20px;">2. Checkup & Kelengkapan Unit</h2>
-            
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="kondisiLayar">Kondisi Layar</label>
-                    <select id="kondisiLayar">
-                        <option value="Mulus">Mulus / Normal</option>
-                        <option value="Shadow">Shadow / Burn-in</option>
-                        <option value="Retak">Retak / Pecah</option>
-                        <option value="Baret">Baret Halus</option>
+            <div class="flex-row">
+                <div>
+                    <label>Kondisi Layar</label>
+                    <select id="qcLayar">
+                        <option>Mulus</option>
+                        <option>Shadow</option>
+                        <option>Retak</option>
+                        <option>Baret</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="healthBaterai">Battery Health (%) / Kondisi</label>
-                    <input type="text" id="healthBaterai" placeholder="Cth: 85% atau Normal">
-                </div>
-                <div class="form-group">
-                    <label for="kondisiKamera">Fungsi Kamera (D/B)</label>
-                    <select id="kondisiKamera">
-                        <option value="Normal">Normal Semua</option>
-                        <option value="Blur">Bergetar / Blur</option>
-                        <option value="Mati">Ada yang Mati</option>
-                    </select>
+                <div>
+                    <label>BH / Baterai</label>
+                    <input type="text" id="qcBat" placeholder="Cth: 85%">
                 </div>
             </div>
 
-            <label>Kelengkapan Bawaan (Checklist):</label>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="kelengkapan" value="Dus"> Dus / Box</label>
-                <label><input type="checkbox" name="kelengkapan" value="Charger"> Kepala Charger</label>
-                <label><input type="checkbox" name="kelengkapan" value="Kabel"> Kabel Data</label>
-                <label><input type="checkbox" name="kelengkapan" value="Headset"> Headset</label>
-                <label><input type="checkbox" name="kelengkapan" value="Buku"> Buku Manual</label>
-                <label><input type="checkbox" name="kelengkapan" value="Nota"> Nota Pembelian Asli</label>
-            </div>
+            <label>Status Saat Ini</label>
+            <select id="status">
+                <option value="Ready">Ready (Stok Tersedia)</option>
+                <option value="Terjual">Terjual (Sudah Laku)</option>
+            </select>
 
-            <div class="form-group" style="margin-top: 15px;">
-                <label for="catatan">Catatan Tambahan (Minus/Detail)</label>
-                <textarea id="catatan" rows="3" placeholder="Tuliskan minus atau catatan khusus mengenai unit ini..."></textarea>
-            </div>
-
-            <button type="button" onclick="simpanData()">Simpan Data Unit</button>
+            <button type="submit" class="btn">Simpan Data</button>
         </form>
     </div>
 
-    <div class="card">
-        <h2>3. Rekap Transaksi Terakhir</h2>
-        <div style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Tanggal</th>
-                        <th>Tipe HP</th>
-                        <th>IMEI</th>
-                        <th>Harga</th>
-                        <th>Kondisi & Kelengkapan</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelData">
-                    <tr>
-                        <td><span class="badge-masuk">Beli</span></td>
-                        <td>10/04/2026</td>
-                        <td>iPhone 13 Pro</td>
-                        <td>351234567890123</td>
-                        <td>Rp 10.500.000</td>
-                        <td>Layar Mulus, BH 88%, Dus + Charger</td>
-                    </tr>
-                    <tr>
-                        <td><span class="badge-keluar">Jual</span></td>
-                        <td>11/04/2026</td>
-                        <td>Samsung S23 Ultra</td>
-                        <td>359876543210987</td>
-                        <td>Rp 15.000.000</td>
-                        <td>Normal, Fullset</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="card" style="background: transparent; box-shadow: none; padding: 0;">
+        <h2>Daftar Unit & QC</h2>
+        <div class="list-container" id="inventoryList">
+            </div>
     </div>
 </div>
 
 <script>
-    // Script simulasi sederhana untuk menangkap event klik tombol
-    function simpanData() {
-        // Logika untuk mengambil value dari form bisa ditambahkan di sini
-        // const merk = document.getElementById('merkTipe').value;
-        // const transaksi = document.getElementById('jenisTransaksi').value;
+    // Inisialisasi data dari LocalStorage
+    let inventory = JSON.parse(localStorage.getItem('hp_data_mobile')) || [];
+
+    const form = document.getElementById('hpForm');
+    
+    // Fungsi Submit Data
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
         
-        alert("Data berhasil diproses! (Ini adalah simulasi front-end. Hubungkan dengan backend/API untuk menyimpan data ke database).");
+        const item = {
+            id: Date.now(),
+            tipe: document.getElementById('tipe').value,
+            beli: parseInt(document.getElementById('hBeli').value),
+            jual: parseInt(document.getElementById('hJual').value),
+            status: document.getElementById('status').value,
+            layar: document.getElementById('qcLayar').value,
+            baterai: document.getElementById('qcBat').value || '-'
+        };
         
-        // Reset form setelah simpan (opsional)
-        // document.getElementById("formTransaksi").reset();
+        inventory.unshift(item); // Masukkan data baru di posisi paling atas
+        updateUI();
+        form.reset();
+        
+        // Scroll ke daftar unit
+        document.getElementById('inventoryList').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Fungsi Hapus Data
+    function deleteItem(id) {
+        if(confirm("Yakin ingin menghapus data unit ini?")) {
+            inventory = inventory.filter(item => item.id !== id);
+            updateUI();
+        }
     }
+
+    // Fungsi Ubah Status (Ready <-> Terjual)
+    function toggleStatus(id) {
+        const index = inventory.findIndex(item => item.id === id);
+        if (index !== -1) {
+            inventory[index].status = inventory[index].status === 'Ready' ? 'Terjual' : 'Ready';
+            updateUI();
+        }
+    }
+
+    // Fungsi Format Rupiah
+    function formatRupiah(angka) {
+        return angka.toLocaleString('id-ID');
+    }
+
+    // Render Tampilan UI
+    function updateUI() {
+        // Simpan ke LocalStorage
+        localStorage.setItem('hp_data_mobile', JSON.stringify(inventory));
+        
+        const listContainer = document.getElementById('inventoryList');
+        listContainer.innerHTML = '';
+        
+        let readyCount = 0;
+        let totalModal = 0;
+        let estimasiProfit = 0;
+
+        if (inventory.length === 0) {
+            listContainer.innerHTML = `<p style="text-align:center; color:#64748b; font-size: 0.9rem;">Belum ada data unit. Silakan input di atas.</p>`;
+        }
+
+        // Looping Data
+        inventory.forEach(item => {
+            const isReady = item.status === 'Ready';
+            
+            // Hitung Dashboard HANYA untuk unit yang Ready
+            if(isReady) {
+                readyCount++;
+                totalModal += item.beli;
+                estimasiProfit += (item.jual - item.beli);
+            }
+
+            // Desain Card Mobile
+            const cardHTML = `
+                <div class="list-item">
+                    <div class="item-header">
+                        <div>
+                            <div class="item-title">${item.tipe}</div>
+                            <div class="item-qc">Layar: ${item.layar} | Bat: ${item.baterai}</div>
+                        </div>
+                        <div class="item-price">Rp ${formatRupiah(item.jual)}</div>
+                    </div>
+                    
+                    <div class="item-footer">
+                        <span class="badge ${isReady ? 'ready' : 'sold'}" onclick="toggleStatus(${item.id})">
+                            ${isReady ? '🟢 Ready' : '🔴 Terjual'}
+                        </span>
+                        <button onclick="deleteItem(${item.id})" class="btn-del">Hapus</button>
+                    </div>
+                </div>
+            `;
+            listContainer.innerHTML += cardHTML;
+        });
+
+        // Update Angka Dashboard
+        document.getElementById('countReady').innerText = readyCount;
+        document.getElementById('totalModal').innerText = 'Rp ' + formatRupiah(totalModal);
+        document.getElementById('totalProfit').innerText = 'Rp ' + formatRupiah(estimasiProfit);
+    }
+
+    // Panggil fungsi render saat halaman pertama kali dibuka
+    updateUI();
 </script>
 
 </body>
