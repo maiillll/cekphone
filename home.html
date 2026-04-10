@@ -1,1 +1,277 @@
 
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Inventori & QC Handphone</title>
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            margin-top: 0;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            color: #212529;
+            font-size: 1.25rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            background: #f1f3f5;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0b5ed7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .badge-masuk { background: #198754; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; }
+        .badge-keluar { background: #dc3545; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Sistem Data Penjualan & QC Handphone</h1>
+        <p>Manajemen unit masuk, keluar, dan pengecekan kondisi perangkat</p>
+    </div>
+
+    <div class="card">
+        <h2>1. Data Transaksi Unit</h2>
+        <form id="formTransaksi">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="jenisTransaksi">Jenis Transaksi</label>
+                    <select id="jenisTransaksi" name="jenisTransaksi" required>
+                        <option value="beli">Unit Masuk (Pembelian)</option>
+                        <option value="jual">Unit Keluar (Penjualan)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tanggal">Tanggal Transaksi</label>
+                    <input type="date" id="tanggal" name="tanggal" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="merkTipe">Merk & Tipe HP</label>
+                    <input type="text" id="merkTipe" placeholder="Cth: iPhone 13 Pro 128GB" required>
+                </div>
+                <div class="form-group">
+                    <label for="imei">Nomor IMEI</label>
+                    <input type="text" id="imei" placeholder="Masukkan 15 digit IMEI" required>
+                </div>
+                <div class="form-group">
+                    <label for="harga">Harga (Rp)</label>
+                    <input type="number" id="harga" placeholder="Cth: 12000000" required>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 20px;">2. Checkup & Kelengkapan Unit</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="kondisiLayar">Kondisi Layar</label>
+                    <select id="kondisiLayar">
+                        <option value="Mulus">Mulus / Normal</option>
+                        <option value="Shadow">Shadow / Burn-in</option>
+                        <option value="Retak">Retak / Pecah</option>
+                        <option value="Baret">Baret Halus</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="healthBaterai">Battery Health (%) / Kondisi</label>
+                    <input type="text" id="healthBaterai" placeholder="Cth: 85% atau Normal">
+                </div>
+                <div class="form-group">
+                    <label for="kondisiKamera">Fungsi Kamera (D/B)</label>
+                    <select id="kondisiKamera">
+                        <option value="Normal">Normal Semua</option>
+                        <option value="Blur">Bergetar / Blur</option>
+                        <option value="Mati">Ada yang Mati</option>
+                    </select>
+                </div>
+            </div>
+
+            <label>Kelengkapan Bawaan (Checklist):</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="kelengkapan" value="Dus"> Dus / Box</label>
+                <label><input type="checkbox" name="kelengkapan" value="Charger"> Kepala Charger</label>
+                <label><input type="checkbox" name="kelengkapan" value="Kabel"> Kabel Data</label>
+                <label><input type="checkbox" name="kelengkapan" value="Headset"> Headset</label>
+                <label><input type="checkbox" name="kelengkapan" value="Buku"> Buku Manual</label>
+                <label><input type="checkbox" name="kelengkapan" value="Nota"> Nota Pembelian Asli</label>
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+                <label for="catatan">Catatan Tambahan (Minus/Detail)</label>
+                <textarea id="catatan" rows="3" placeholder="Tuliskan minus atau catatan khusus mengenai unit ini..."></textarea>
+            </div>
+
+            <button type="button" onclick="simpanData()">Simpan Data Unit</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>3. Rekap Transaksi Terakhir</h2>
+        <div style="overflow-x:auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Tanggal</th>
+                        <th>Tipe HP</th>
+                        <th>IMEI</th>
+                        <th>Harga</th>
+                        <th>Kondisi & Kelengkapan</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelData">
+                    <tr>
+                        <td><span class="badge-masuk">Beli</span></td>
+                        <td>10/04/2026</td>
+                        <td>iPhone 13 Pro</td>
+                        <td>351234567890123</td>
+                        <td>Rp 10.500.000</td>
+                        <td>Layar Mulus, BH 88%, Dus + Charger</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge-keluar">Jual</span></td>
+                        <td>11/04/2026</td>
+                        <td>Samsung S23 Ultra</td>
+                        <td>359876543210987</td>
+                        <td>Rp 15.000.000</td>
+                        <td>Normal, Fullset</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Script simulasi sederhana untuk menangkap event klik tombol
+    function simpanData() {
+        // Logika untuk mengambil value dari form bisa ditambahkan di sini
+        // const merk = document.getElementById('merkTipe').value;
+        // const transaksi = document.getElementById('jenisTransaksi').value;
+        
+        alert("Data berhasil diproses! (Ini adalah simulasi front-end. Hubungkan dengan backend/API untuk menyimpan data ke database).");
+        
+        // Reset form setelah simpan (opsional)
+        // document.getElementById("formTransaksi").reset();
+    }
+</script>
+
+</body>
+</html>
