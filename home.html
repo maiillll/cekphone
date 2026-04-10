@@ -197,24 +197,16 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // JANGAN LUPA: Ganti dengan Firebase Config Anda!
-  // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDmi2RvPA_PchOkx9g52uqD-GoXryyxWiQ",
-  authDomain: "xtens-inventory.firebaseapp.com",
-  databaseURL: "https://xtens-inventory-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "xtens-inventory",
-  storageBucket: "xtens-inventory.firebasestorage.app",
-  messagingSenderId: "918016820557",
-  appId: "1:918016820557:web:3deec4746e68c815902304"
-};
-
-
+    // Kofigurasi Firebase Asli Anda
+    const firebaseConfig = {
+      apiKey: "AIzaSyDmi2RvPA_PchOkx9g52uqD-GoXryyxWiQ",
+      authDomain: "xtens-inventory.firebaseapp.com",
+      databaseURL: "https://xtens-inventory-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "xtens-inventory",
+      storageBucket: "xtens-inventory.firebasestorage.app",
+      messagingSenderId: "918016820557",
+      appId: "1:918016820557:web:3deec4746e68c815902304"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
@@ -259,7 +251,8 @@ const firebaseConfig = {
             form.reset();
             document.querySelectorAll('.qc-checkbox').forEach(cb => cb.checked = false);
         } catch (error) {
-            alert("Gagal menyimpan data!");
+            alert("Gagal menyimpan data! Pastikan Database Rules sudah diset ke True.");
+            console.error(error);
         } finally {
             btnSubmit.disabled = false;
             btnSubmit.innerText = "Simpan ke Database";
