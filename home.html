@@ -16,7 +16,6 @@
             --text-main: #1f2937;
             --text-muted: #6b7280;
             --border: #e5e7eb;
-            --accent: #8b5cf6;
         }
 
         body { 
@@ -61,11 +60,12 @@
         .flex-row { display: flex; gap: 12px; }
         .flex-row > div { flex: 1; }
 
-        .qc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .qc-instruction { font-size: 0.8rem; color: var(--danger); font-weight: bold; margin-bottom: 10px; text-align: center; background: var(--danger-bg); padding: 8px; border-radius: 8px;}
+        .qc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-bottom: 20px; }
         .qc-checkbox { display: none; }
         .qc-label {
-            display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px 8px;
-            background-color: #f3f4f6; border: 2px solid transparent; border-radius: 12px; font-size: 0.85rem;
+            display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px;
+            background-color: #f3f4f6; border: 2px solid transparent; border-radius: 10px; font-size: 0.8rem;
             font-weight: 600; cursor: pointer; transition: all 0.2s ease; text-align: center; color: var(--text-muted); user-select: none;
         }
         .qc-checkbox:checked + .qc-label {
@@ -92,8 +92,8 @@
         .pill-region { background: #fdf2f8; color: #be185d; border: 1px solid #fce7f3; }
         .pill-standard { background: #f3f4f6; color: #4b5563; }
         
-        .qc-result-ok { font-size: 0.85rem; color: #047857; background: #d1fae5; padding: 6px 10px; border-radius: 8px; font-weight: 700; margin-top: 5px; }
-        .qc-result-minus { font-size: 0.85rem; color: #b91c1c; background: #fee2e2; padding: 6px 10px; border-radius: 8px; font-weight: 700; margin-top: 5px; }
+        .qc-result-ok { font-size: 0.85rem; color: #047857; background: #d1fae5; padding: 6px 10px; border-radius: 8px; font-weight: 700; margin-top: 5px; display: inline-block;}
+        .qc-result-minus { font-size: 0.85rem; color: #b91c1c; background: #fee2e2; padding: 6px 10px; border-radius: 8px; font-weight: 700; margin-top: 5px; display: inline-block; line-height: 1.4;}
         
         .item-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed var(--border); padding-top: 12px; }
         .badge { padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
@@ -106,7 +106,7 @@
 
 <div class="container">
     <div class="header-title">X-TEN'S INVENTORY 📱</div>
-    <div id="loader" style="text-align:center; color:var(--primary); font-weight:bold;">🔄 Menghubungkan...</div>
+    <div id="loader" style="text-align:center; color:var(--primary); font-weight:bold; margin-bottom: 10px;">🔄 Menghubungkan ke Database...</div>
 
     <div class="dashboard">
         <div class="stat-card"><h3>Unit Ready</h3><p id="countReady">0</p></div>
@@ -118,7 +118,7 @@
         <h2>✨ Tambah Unit Baru</h2>
         <form id="hpForm">
             <label>Merk & Tipe HP</label>
-            <input type="text" id="tipe" placeholder="iPhone 14 Pro" required>
+            <input type="text" id="tipe" placeholder="Contoh: iPhone 14 Pro Max" required>
             
             <div class="flex-row">
                 <div>
@@ -148,22 +148,42 @@
 
             <div class="flex-row">
                 <div>
-                    <label>Layar</label>
+                    <label>Kondisi Layar</label>
                     <select id="qcLayar">
                         <option>Mulus / Normal</option><option>Shadow Tipis</option><option>Shadow Parah</option><option>Retak Kaca</option><option>Baret Dalam</option>
                     </select>
                 </div>
-                <div><label>BH (%)</label><input type="text" id="qcBat" placeholder="Cth: 88%" required></div>
+                <div>
+                    <label>Kondisi Body</label>
+                    <select id="qcBody">
+                        <option>Mulus (Like New)</option><option>Lecet Pemakaian</option><option>Dent / Penyok</option><option>Backglass Pecah</option>
+                    </select>
+                </div>
             </div>
 
-            <label>Checklist Minus (Kosongkan jika Normal)</label>
+            <div class="flex-row" style="margin-bottom: 15px;">
+                <div><label>Baterai (BH / Kondisi)</label><input type="text" id="qcBat" placeholder="Cth: 88% Ori" required style="margin-bottom:0;"></div>
+            </div>
+
+            <h2 style="margin-top: 25px;">🔍 Checklist Kelengkapan & Fungsi</h2>
+            <div class="qc-instruction">TAP PADA ITEM JIKA FUNGSI RUSAK / MINUS!</div>
+            
             <div class="qc-grid">
-                <label><input type="checkbox" name="minusList" value="Kamera D/B" class="qc-checkbox"><span class="qc-label">📸 Kamera</span></label>
+                <label><input type="checkbox" name="minusList" value="Kamera Depan" class="qc-checkbox"><span class="qc-label">🤳 Kamera Depan</span></label>
+                <label><input type="checkbox" name="minusList" value="Kamera Belakang" class="qc-checkbox"><span class="qc-label">📸 Kamera Blkg</span></label>
+                <label><input type="checkbox" name="minusList" value="Flash/Senter" class="qc-checkbox"><span class="qc-label">🔦 Flash/Senter</span></label>
+                <label><input type="checkbox" name="minusList" value="Wi-Fi / Bluetooth" class="qc-checkbox"><span class="qc-label">📶 Wi-Fi & BT</span></label>
+                <label><input type="checkbox" name="minusList" value="Kompas/GPS" class="qc-checkbox"><span class="qc-label">🧭 Kompas</span></label>
                 <label><input type="checkbox" name="minusList" value="TrueTone" class="qc-checkbox"><span class="qc-label">☀️ TrueTone</span></label>
-                <label><input type="checkbox" name="minusList" value="Face ID / FP" class="qc-checkbox"><span class="qc-label">🧑‍🦲 Face ID/FP</span></label>
-                <label><input type="checkbox" name="minusList" value="Wi-Fi/BT" class="qc-checkbox"><span class="qc-label">📶 Koneksi</span></label>
-                <label><input type="checkbox" name="minusList" value="Speaker" class="qc-checkbox"><span class="qc-label">🔊 Speaker</span></label>
-                <label><input type="checkbox" name="minusList" value="Tombol Fisik" class="qc-checkbox"><span class="qc-label">🔘 Tombol</span></label>
+                <label><input type="checkbox" name="minusList" value="Face ID / FP" class="qc-checkbox"><span class="qc-label">🧑‍🦲 Face ID / FP</span></label>
+                <label><input type="checkbox" name="minusList" value="Sensor Proximity" class="qc-checkbox"><span class="qc-label">🧲 Proximity</span></label>
+                <label><input type="checkbox" name="minusList" value="Microfon" class="qc-checkbox"><span class="qc-label">🎤 Microfon</span></label>
+                <label><input type="checkbox" name="minusList" value="Getar/Vibrate" class="qc-checkbox"><span class="qc-label">📳 Getar/Vibe</span></label>
+                <label><input type="checkbox" name="minusList" value="Tombol Power" class="qc-checkbox"><span class="qc-label">🔘 T. Power</span></label>
+                <label><input type="checkbox" name="minusList" value="Tombol Volume" class="qc-checkbox"><span class="qc-label">🔉 T. Volume</span></label>
+                <label><input type="checkbox" name="minusList" value="Switch DND" class="qc-checkbox"><span class="qc-label">🔕 Switch DND</span></label>
+                <label><input type="checkbox" name="minusList" value="Speaker Atas" class="qc-checkbox"><span class="qc-label">🔊 Spk Atas</span></label>
+                <label><input type="checkbox" name="minusList" value="Speaker Bawah" class="qc-checkbox"><span class="qc-label">🔊 Spk Bawah</span></label>
             </div>
 
             <button type="submit" class="btn" id="btnSubmit" disabled>Simpan ke Database</button>
@@ -177,7 +197,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // GANTI DENGAN CONFIG ANDA
+    // JANGAN LUPA: Ganti dengan Firebase Config Anda!
     const firebaseConfig = {
       apiKey: "API_KEY_ANDA",
       authDomain: "PROJECT_ANDA.firebaseapp.com",
@@ -195,6 +215,7 @@
     const form = document.getElementById('hpForm');
     const btnSubmit = document.getElementById('btnSubmit');
 
+    // Listener Realtime Firebase
     onValue(inventoryRef, (snapshot) => {
         document.getElementById('loader').style.display = 'none';
         btnSubmit.disabled = false;
@@ -202,8 +223,12 @@
         renderUI(data ? Object.keys(data).map(key => ({ id: key, ...data[key] })).reverse() : []);
     });
 
+    // Simpan Data Baru
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = "Menyimpan...";
+
         let minusArr = [];
         document.querySelectorAll('input[name="minusList"]:checked').forEach(cb => minusArr.push(cb.value));
         
@@ -215,37 +240,60 @@
             jual: parseInt(document.getElementById('hJual').value),
             status: 'Ready',
             layar: document.getElementById('qcLayar').value,
+            body: document.getElementById('qcBody').value,
             baterai: document.getElementById('qcBat').value,
-            minus: minusArr
+            minus: minusArr,
+            timestamp: Date.now()
         };
         
-        await push(inventoryRef, item);
-        form.reset();
+        try {
+            await push(inventoryRef, item);
+            form.reset();
+            document.querySelectorAll('.qc-checkbox').forEach(cb => cb.checked = false);
+        } catch (error) {
+            alert("Gagal menyimpan data!");
+        } finally {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "Simpan ke Database";
+        }
     });
 
+    // Fungsi Toggle & Hapus
     window.toggleStatus = (id, current) => update(ref(db, 'inventory/' + id), { status: current === 'Ready' ? 'Terjual' : 'Ready' });
-    window.deleteItem = (id) => confirm("Hapus permanen?") && remove(ref(db, 'inventory/' + id));
+    window.deleteItem = (id) => confirm("Hapus permanen unit ini dari database?") && remove(ref(db, 'inventory/' + id));
 
+    // Render Tampilan
     function renderUI(inventory) {
         const list = document.getElementById('inventoryList');
         list.innerHTML = '';
         let ready = 0, modal = 0, profit = 0;
 
+        if (inventory.length === 0) {
+            list.innerHTML = `<p style="text-align:center; color:var(--text-muted);">Belum ada data di Database.</p>`;
+        }
+
         inventory.forEach(item => {
             const isReady = item.status === 'Ready';
             if(isReady) { ready++; modal += item.beli; profit += (item.jual - item.beli); }
 
-            const minusStr = (item.minus || []).length === 0 ? '<div class="qc-result-ok">✅ Kondisi Normal</div>' : `<div class="qc-result-minus">⚠️ Minus: ${item.minus.join(', ')}</div>`;
+            // Logika Visual Minus
+            const minusList = item.minus || [];
+            const minusStr = minusList.length === 0 
+                ? '<div class="qc-result-ok">✅ Semua Fungsi Normal</div>' 
+                : `<div class="qc-result-minus">⚠️ Minus: ${minusList.join(', ')}</div>`;
 
+            // Render Card
             list.innerHTML += `
                 <div class="list-item" style="opacity: ${isReady ? '1' : '0.6'}">
                     <div class="item-header">
                         <div>
                             <div class="item-title">${item.tipe}</div>
                             <div class="detail-pills">
-                                <span class="pill pill-storage">${item.storage}</span>
-                                <span class="pill pill-region">${item.region}</span>
+                                <span class="pill pill-storage">${item.storage || '-'}</span>
+                                <span class="pill pill-region">${item.region || '-'}</span>
                                 <span class="pill pill-standard">BH: ${item.baterai}</span>
+                                <span class="pill pill-standard">Layar: ${item.layar}</span>
+                                <span class="pill pill-standard">Body: ${item.body}</span>
                             </div>
                             ${minusStr}
                         </div>
@@ -253,14 +301,15 @@
                     </div>
                     <div class="item-footer">
                         <span class="badge ${isReady ? 'ready' : 'sold'}" onclick="toggleStatus('${item.id}', '${item.status}')">
-                            ${isReady ? '🟢 Ready' : '⚪ Terjual'}
+                            ${isReady ? '🟢 Ready Stok' : '⚪ Terjual'}
                         </span>
-                        <button onclick="deleteItem('${item.id}')" class="btn-del">Hapus</button>
+                        <button onclick="deleteItem('${item.id}')" class="btn-del">🗑️ Hapus</button>
                     </div>
                 </div>
             `;
         });
 
+        // Update Dashboard
         document.getElementById('countReady').innerText = ready;
         document.getElementById('totalModal').innerText = 'Rp ' + modal.toLocaleString('id-ID');
         document.getElementById('totalProfit').innerText = 'Rp ' + profit.toLocaleString('id-ID');
